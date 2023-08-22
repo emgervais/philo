@@ -6,7 +6,7 @@
 /*   By: egervais <egervais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 21:43:53 by egervais          #+#    #+#             */
-/*   Updated: 2023/08/08 20:11:05 by egervais         ###   ########.fr       */
+/*   Updated: 2023/08/22 16:13:51 by egervais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,51 @@ u_int64_t	get_time(void)
 	return ((u_int64_t)(time.tv_sec * 1000 + time.tv_usec / 1000));
 }
 
+void ft_usleep(u_int64_t time)
+{
+    u_int64_t start;
+
+    start = get_time();
+    while(get_time() - start < time)
+        usleep(time / 10);
+}
+
+bool cprintf(int a, t_philo *philo)
+{
+    if(a == 1)
+    {
+        pthread_mutex_lock(&philo->data->lock);
+        if(philo->data->dead || philo->data->finished)
+        {
+            pthread_mutex_unlock(&philo->data->lock);
+            return (0);
+        }
+        pthread_mutex_unlock(&philo->data->lock);
+        pthread_mutex_lock(philo->l_fork);
+        printf("%d philo #%d %s\n", philo->id, get_time(), FORK);
+        pthread_mutex_lock(philo->r_fork);
+        printf("%d philo #%d %s\n", philo->id, get_time(), FORK);
+        ft_usleep(philo->data->eat_time);
+        pthread_mutex_unlock(philo->l_fork);
+        pthread_mutex_unlock(philo->r_fork);
+    }
+    else if(a == 2)
+    {
+        pthread_mutex_lock(&philo->data->lock);
+        if(philo->data->dead || philo->data->finished)
+        {
+            pthread_mutex_unlock(&philo->data->lock);
+            return (0);
+        }
+        pthread_mutex_unlock(&philo->data->lock);
+        
+    }
+    else
+    {
+        
+    }
+    return(0);
+}
 bool print_error(char *err)
 {
     return(write(2, err, 270), 1);
@@ -64,9 +109,6 @@ bool init_data(t_data *data, char **av, int ac)
     data->death_time = atop(av[2]);
     data->eat_time = atop(av[3]);
     data->sleep_time = atop(av[4]);
-    data->tid = NULL;
-    data->forks = NULL;
-    data->philos = NULL;
     data->meals_nb = -1;
     data->dead = 0;
     data->finished = 0;
@@ -115,29 +157,32 @@ bool init_forks(t_data *data)
     return (0);
 }
 
+
 void *philo_life(void *d)
 {
     t_philo *philo;
+    int i;
 
     philo = d;
-    //if only one philo dies after time to die
+    //if only one ->philo dies after time to die
     if(philo->data->philo_num == 1)
     {
-        //printf take fork
-        //sleep time of death
+        printf("%d philo #1 %s\n",get_time(), FORK);
+        ft_usleep(philo->time_to_die);
         return (NULL);
     }
     //delay half the philo
     if(philo->id % 2 == 0)
     {
-        //printthink
-        //sleep
+        printf("%d philo #%d %s\n", philo->id, get_time(), THINK);
+        ft_usleep(philo->data->eat_time / 2);
     }
     //will do those actions for ever until they detect that someone dies
     while(1)
     {
-        //eat-sleep-think
-        break ;
+        i = 1;
+        if(cprintf(i++, philo) || cprintf(i++, philo) || cprintf(i++, philo))
+            return (NULL);
     }
     return (NULL);
 }
