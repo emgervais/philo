@@ -6,7 +6,7 @@
 /*   By: egervais <egervais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 21:44:02 by egervais          #+#    #+#             */
-/*   Updated: 2023/08/08 20:03:57 by egervais         ###   ########.fr       */
+/*   Updated: 2023/09/20 19:46:41 by egervais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <sys/time.h>
 
 # define ERR_AV "Error: wrong argument\n\
         1st argument: number of philosophers\n\
@@ -43,6 +44,7 @@ typedef struct s_philo
 {
 	struct s_data	*data;
 	pthread_t       t1;
+	pthread_t		t2;
 	int             id;
 	int             eat_count;
 	int             status;
@@ -56,7 +58,7 @@ typedef struct s_philo
 
 typedef struct s_data
 {
-	pthread_t       *tid;
+	pthread_t       tid;
 	int             philo_num;
 	int             meals_nb;
 	int             dead;

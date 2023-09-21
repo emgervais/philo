@@ -6,12 +6,12 @@
 #    By: egervais <egervais@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/18 14:49:38 by egervais          #+#    #+#              #
-#    Updated: 2023/07/18 23:32:28 by egervais         ###   ########.fr        #
+#    Updated: 2023/09/20 20:09:22 by egervais         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	:= philo
-CFLAGS	:= -Wextra -Wall -Werror -g
+CFLAGS	:= -Wextra -Wall -Werror -g -fsanitize=thread
 SRCS	:= main.c
 
 OBJS = ${SRCS:.c=.o}
