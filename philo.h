@@ -58,7 +58,6 @@ typedef struct s_philo
 
 typedef struct s_data
 {
-	pthread_t       tid;
 	int             philo_num;
 	int             meals_nb;
 	int             dead;
