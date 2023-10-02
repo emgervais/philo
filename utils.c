@@ -26,34 +26,20 @@ bool print_error(char *err)
     return(write(2, err, 270), 1);
 }
 
-u_int64_t	get_time(void)
+long long	get_time(void)
 {
 	struct timeval	time;
 
 	gettimeofday(&time, NULL);
-	return ((u_int64_t)(time.tv_sec * 1000 + time.tv_usec / 1000));
+	return ((long long)(time.tv_sec * 1000 + time.tv_usec / 1000));
 }
 
-void ft_usleep(u_int64_t time)
+void ft_usleep(long long time)
 {
-    u_int64_t start;
+    long long start;
 
     start = get_time();
-    while(1)
-    {
-        if(get_time() - start > time)
-            return ;
-    }
+    while(get_time() - start < time)
+        usleep(100);
 }
 
-bool is_dead(t_philo *philo)
-{
-        pthread_mutex_lock(&philo->data->lock);
-        if(philo->data->dead || philo->data->finished)
-        {
-            pthread_mutex_unlock(&philo->data->lock);
-            return (1);
-        }
-        pthread_mutex_unlock(&philo->data->lock);
-        return (0);
-}

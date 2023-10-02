@@ -6,7 +6,7 @@
 /*   By: egervais <egervais@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/07 21:44:02 by egervais          #+#    #+#             */
-/*   Updated: 2023/09/20 19:46:41 by egervais         ###   ########.fr       */
+/*   Updated: 2023/10/01 21:23:17 by egervais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,12 @@ typedef struct s_philo
 {
 	struct s_data	*data;
 	pthread_t       t1;
-	pthread_t		t2;
 	int             id;
 	int             eat_count;
 	int             status;
 	int             eating;
-	uint64_t        time_to_die;
-	uint64_t        last_meal;
+	long long        time_to_die;
+	long long        last_meal;
 	pthread_mutex_t	lock;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
@@ -63,13 +62,23 @@ typedef struct s_data
 	int             dead;
 	int             finished;
 	t_philo         *philos;
-	u_int64_t       death_time;
-	u_int64_t       eat_time;
-	u_int64_t       sleep_time;
-	u_int64_t       start_time;
+	long long       death_time;
+	long long       eat_time;
+	long long       sleep_time;
+	long long       start_time;
 	pthread_mutex_t *forks;
 	pthread_mutex_t lock;
-	pthread_mutex_t write;
 } t_data;
 
+bool philo_start(t_data *data);
+long atop(char *num);
+bool print_error(char *err);
+long long	get_time(void);
+void ft_usleep(long long time);
+bool is_dead(t_philo *philo);
+bool init_data(t_data *data, char **av, int ac);
+bool init_p(t_data *data);
+bool init_philo(t_data *data);
+bool init_forks(t_data *data);
+void *check(t_data *data);
 #endif

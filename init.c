@@ -13,7 +13,7 @@ bool init_data(t_data *data, char **av, int ac)
     data->finished = 0;
     if(ac == 6)
         data->meals_nb = atop(av[5]);
-    if(pthread_mutex_init(&data->write, NULL) || pthread_mutex_init(&data->lock, NULL))
+    if(pthread_mutex_init(&data->lock, NULL))
         return (1);
     return (0);
 }
@@ -32,7 +32,7 @@ bool init_philo(t_data *data)
     int i;
 
     i = 0;
-    while(i <= data->philo_num)
+    while(i < data->philo_num)
     {
         data->philos[i].data = data;
         data->philos[i].id = i + 1;
@@ -40,9 +40,11 @@ bool init_philo(t_data *data)
         data->philos[i].status = 0;
         data->philos[i].eating = 0;
         data->philos[i].time_to_die = data->death_time;
-        data->philos[i].l_fork = &data->forks[(i+8)%9];
+        data->philos[i].l_fork = &data->forks[i + 1];
+        if(i + 1 == data->philo_num)
+            data->philos[i].l_fork = &data->forks[0];
         data->philos[i].r_fork = &data->forks[i];
-        if(pthread_mutex_init(&data->philos[i].lock, NULL))
+        if(pthread_mutex_init(&data->philos[i++].lock, NULL))
             return (1);
     }
     return (0);
